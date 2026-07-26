@@ -143,6 +143,8 @@ section{padding:52px 0}
 .field input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(21,155,176,.15)}
 .field input.err{border-color:var(--red)}
 .modal .btn{width:100%;padding:13px;font-size:15px;margin-top:4px}
+.modal .btn:disabled{opacity:.6;cursor:not-allowed}
+.form-error{margin-top:10px;font-size:12.5px;color:var(--red);text-align:center;line-height:1.5}
 .modal-note{margin-top:12px;font-size:11px;color:#93a8bc;text-align:center;line-height:1.5}
 .modal-success{display:none;text-align:center;padding:24px 0 8px}
 .modal-success .ok{width:60px;height:60px;border-radius:50%;background:#e8f7ee;color:#15803d;font-size:28px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
@@ -445,7 +447,8 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
         <label for="fPhone">Số điện thoại</label>
         <input id="fPhone" type="tel" placeholder="09xx xxx xxx" autocomplete="tel">
       </div>
-      <button class="btn" onclick="submitLead()">Gửi thông tin</button>
+      <button class="btn" id="submitBtn" onclick="submitLead()">Gửi thông tin</button>
+      <p class="form-error" id="formError" style="display:none"></p>
       <p class="modal-note">Thông tin của bạn được bảo mật và chỉ dùng cho mục đích tư vấn.</p>
     </div>
     <div class="modal-success" id="modalSuccess">
@@ -481,28 +484,39 @@ document.getElementById('mainMenu').addEventListener('click',e=>{if(e.target.tag
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeMenu()}});
 
-function submitLead(){
+async function submitLead(){
   const name=document.getElementById('fName');
   const email=document.getElementById('fEmail');
   const phone=document.getElementById('fPhone');
+  const errorEl=document.getElementById('formError');
+  const submitBtn=document.getElementById('submitBtn');
   let ok=true;
   [name,email,phone].forEach(f=>f.classList.remove('err'));
+  errorEl.style.display='none';
   if(!name.value.trim()){name.classList.add('err');ok=false}
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim())){email.classList.add('err');ok=false}
   if(!/^(0|\+84)\d{8,10}$/.test(phone.value.replace(/\s/g,''))){phone.classList.add('err');ok=false}
   if(!ok)return;
 
-  // === NƠI GỬI DỮ LIỆU ===
-  // Bản miễn phí (GitHub Pages không có server): dùng Formspree / Google Apps Script.
-  // Ví dụ với Formspree — tạo form tại formspree.io rồi thay YOUR_FORM_ID:
-  // fetch('https://formspree.io/f/YOUR_FORM_ID', {
-  //   method:'POST',
-  //   headers:{'Content-Type':'application/json'},
-  //   body:JSON.stringify({name:name.value, email:email.value, phone:phone.value})
-  // });
+  submitBtn.disabled=true;
+  submitBtn.textContent='Đang gửi...';
 
-  document.getElementById('modalForm').style.display='none';
-  document.getElementById('modalSuccess').style.display='block';
+  try{
+    const res=await fetch('https://formspree.io/f/xykrbakb',{
+      method:'POST',
+      headers:{'Content-Type':'application/json',Accept:'application/json'},
+      body:JSON.stringify({name:name.value.trim(),email:email.value.trim(),phone:phone.value.trim()})
+    });
+    if(!res.ok)throw new Error('submit failed');
+    document.getElementById('modalForm').style.display='none';
+    document.getElementById('modalSuccess').style.display='block';
+  }catch(err){
+    errorEl.textContent='Gửi không thành công, vui lòng thử lại';
+    errorEl.style.display='block';
+  }finally{
+    submitBtn.disabled=false;
+    submitBtn.textContent='Gửi thông tin';
+  }
 }
 </script>
 </body>
