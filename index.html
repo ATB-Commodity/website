@@ -15,14 +15,22 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
+html,body{overflow-x:hidden;max-width:100%}
 body{font-family:'Be Vietnam Pro',sans-serif;color:var(--ink);background:linear-gradient(180deg,#e8f3fb 0%,#ffffff 320px);}
 .mono{font-family:'IBM Plex Mono',monospace}
 a{text-decoration:none;color:inherit}
 .wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+img{max-width:100%;height:auto;display:block}
+table{max-width:100%;display:block;overflow-x:auto}
+iframe{max-width:100%}
+
+/* ===== LOGO ===== */
+.logo-container{display:flex;align-items:center}
+.logo-img{width:75px;height:auto}
 
 /* ===== HEADER ===== */
 header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;gap:26px;height:66px}
+.nav{display:flex;align-items:center;gap:26px;height:66px;position:relative}
 .logo{display:flex;align-items:center;gap:10px}
 .badge{width:44px;height:44px;border-radius:50%;background:var(--navy);border:2.5px solid var(--red);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;line-height:1}
 .badge b{font-size:15px;font-weight:900;letter-spacing:.5px}
@@ -33,6 +41,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdro
 nav.menu{display:flex;gap:22px;margin-left:auto}
 nav.menu a{font-size:14px;font-weight:600;color:var(--navy);padding:6px 2px;border-bottom:2px solid transparent;white-space:nowrap}
 nav.menu a:hover,nav.menu a.active{border-bottom-color:var(--red);color:var(--red)}
+.menu-toggle{display:none;background:none;border:none;font-size:26px;color:var(--navy);cursor:pointer;line-height:1;padding:4px 8px;margin-left:auto}
 .btn{display:inline-block;background:var(--red);color:#fff;font-weight:700;font-size:14px;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;transition:.15s;font-family:inherit}
 .btn:hover{background:#c01318}
 .btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
@@ -53,6 +62,9 @@ nav.menu a:hover,nav.menu a.active{border-bottom-color:var(--red);color:var(--re
 .board-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 20px 50px rgba(18,58,99,.15)}
 .board-card .bar{background:var(--navy);color:#fff;font-size:13px;font-weight:700;letter-spacing:.5px;padding:11px 16px;display:flex;justify-content:space-between}
 .board-card .bar span{color:#8fb3d1;font-weight:500;font-size:11.5px}
+tv-ticker-tape{display:block;width:100%}
+.tv-board{display:block;width:100%;max-width:850px;height:467px}
+.calendar-frame{display:block;width:100%;max-width:600px;height:600px;border:0}
 
 /* ===== SECTIONS ===== */
 section{padding:52px 0}
@@ -146,11 +158,45 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
 .foot-brand p{font-size:13px;line-height:1.65;margin-top:12px;max-width:300px}
 .foot-legal{padding-top:20px;font-size:11.5px;line-height:1.7;color:#6c8cab}
 @media(max-width:920px){
-  .hero{grid-template-columns:1fr}
+  .nav{gap:14px}
+  .hero{grid-template-columns:1fr;gap:28px;padding:36px 0 32px}
+  .hero h1{font-size:30px}
   .news-grid,.view-grid{grid-template-columns:1fr}
-  .foot-grid{grid-template-columns:1fr 1fr}
-  nav.menu{display:none}
+  .foot-grid{grid-template-columns:1fr}
+  section{padding:38px 0}
+
+  .menu-toggle{display:inline-block}
+  nav.menu{
+    display:none;
+    position:absolute;
+    top:100%;left:0;right:0;
+    flex-direction:column;
+    gap:0;
+    margin-left:0;
+    background:#fff;
+    border:1px solid var(--line);
+    border-top:none;
+    box-shadow:0 16px 30px rgba(18,58,99,.14);
+    padding:6px 20px 14px;
+    z-index:60;
+  }
+  nav.menu.open{display:flex}
+  nav.menu a{width:100%;padding:13px 2px;border-bottom:1px solid var(--line)}
+  nav.menu a:last-child{border-bottom:none}
+
+  .tv-board{height:380px}
+  .calendar-frame{height:460px}
+
   .cta{flex-direction:column;text-align:center;padding:36px 24px}
+}
+
+@media(max-width:600px){
+  .hero h1{font-size:24px}
+  .logo-img{width:58px}
+  .sec-head{flex-direction:column;align-items:flex-start;gap:8px}
+  .sec-head h2{font-size:22px}
+  .cta h2{font-size:20px}
+  .modal{padding:24px 20px}
 }
 </style>
 </head>
@@ -158,26 +204,16 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
 
 <header>
   <div class="wrap nav">
-<div class="logo-container">
-  <img src="https://pixabay.com/images/download/atb_commodity-logo-10395673_1920.png" alt="ATB Commodity" class="logo-img"
-</div>
-
-<style>
-  .logo-container {
-    display: flex;
-    align-items: center;
-  }
-  .logo-img {
-    width: 75px;
-    height: auto;
-  }
-</style>
-    <nav class="menu">
+    <div class="logo-container">
+      <img src="https://pixabay.com/images/download/atb_commodity-logo-10395673_1920.png" alt="ATB Commodity" class="logo-img">
+    </div>
+    <nav class="menu" id="mainMenu">
       <a href="#" class="active">Trang chủ</a>
       <a href="#lich-kinh-te">Lịch kinh tế</a>
       <a href="#tin-tuc">Tin tức 24/7</a>
       <a href="#mxv">Tin điều hành MXV</a>
     </nav>
+    <button class="menu-toggle" id="menuToggle" onclick="toggleMenu()" aria-label="Mở/đóng menu" aria-expanded="false" aria-controls="mainMenu">☰</button>
     <button class="btn" style="margin-left:8px" onclick="openModal()">Mở tài khoản</button>
   </div>
 </header>
@@ -206,8 +242,9 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
 <div>
 <script type="module" src="https://widgets.tradingview-widget.com/w/vi_VN/tv-market-data.js"></script>
 
-<tv-market-data symbol-sectors='[{"sectionName":"Commodity","symbols":["TVC:GOLD","TVC:SILVER","TVC:PLATINUM","FX:COPPER","BLACKBULL:ROBUSTA","BLACKBULL:ARABICA","CMCMARKETS:CORN","SPARKS:WHEAT","CMCMARKETS:SOYBEAN","WHSELFINVEST:SOYBEANOIL","CAPITALCOM:SOYBEANMEAL","FOREXCOM:SUGAR"]}]' style="width: 850px; height: 467px"></tv-market-data>
+<tv-market-data symbol-sectors='[{"sectionName":"Commodity","symbols":["TVC:GOLD","TVC:SILVER","TVC:PLATINUM","FX:COPPER","BLACKBULL:ROBUSTA","BLACKBULL:ARABICA","CMCMARKETS:CORN","SPARKS:WHEAT","CMCMARKETS:SOYBEAN","WHSELFINVEST:SOYBEANOIL","CAPITALCOM:SOYBEANMEAL","FOREXCOM:SUGAR"]}]' class="tv-board"></tv-market-data>
 </div>
+  </div>
 
   <!-- LỊCH KINH TẾ -->
   <section id="lich-kinh-te">
@@ -217,7 +254,7 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
         <p class="sec-sub">Các sự kiện vĩ mô quan trọng ảnh hưởng trực tiếp đến giá hàng hóa: lãi suất Fed, CPI, tồn kho EIA, báo cáo USDA…</p>
       </div>
     </div>
-    <iframe src="https://tool.fastbull.com/vi/calendar?theme=white&ftToken=f4facccde9ed4374a9b82cdea31bc9c4" frameborder="0" width="600px" height="600px"></iframe>
+    <iframe src="https://tool.fastbull.com/vi/calendar?theme=white&ftToken=f4facccde9ed4374a9b82cdea31bc9c4" frameborder="0" class="calendar-frame" loading="lazy"></iframe>
   </section>
 
   <!-- TIN TỨC 24/7 -->
@@ -355,7 +392,8 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
     <div class="foot-grid">
       <div class="foot-brand">
         <div class="logo-container">
-  <img src="https://pixabay.com/images/download/atb_commodity-logo-10395673_1920.png" alt="ATB Commodity" class="logo-img"
+          <img src="https://pixabay.com/images/download/atb_commodity-logo-10395673_1920.png" alt="ATB Commodity" class="logo-img">
+        </div>
         <p>Cổng thông tin thị trường hàng hóa phái sinh: tin tức, lịch kinh tế, tin điều hành MXV và nhận định mỗi ngày.</p>
       </div>
       <div>
@@ -428,7 +466,20 @@ function openModal(){
 function closeModal(){
   document.getElementById('modalOverlay').classList.remove('open');
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+function toggleMenu(){
+  const menu=document.getElementById('mainMenu');
+  const btn=document.getElementById('menuToggle');
+  const open=menu.classList.toggle('open');
+  btn.setAttribute('aria-expanded',open?'true':'false');
+}
+function closeMenu(){
+  document.getElementById('mainMenu').classList.remove('open');
+  document.getElementById('menuToggle').setAttribute('aria-expanded','false');
+}
+document.getElementById('mainMenu').addEventListener('click',e=>{if(e.target.tagName==='A')closeMenu()});
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeMenu()}});
 
 function submitLead(){
   const name=document.getElementById('fName');
