@@ -173,35 +173,9 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
 </header>
 
 <!-- TICKER: TradingView Ticker Tape widget -->
-<div class="ticker-strip">
-  <div class="tradingview-widget-container">
-    <div class="tradingview-widget-container__widget"></div>
-    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-    {
-      "symbols": [
-        {"proName":"OANDA:XAUUSD","title":"Vàng"},
-        {"proName":"OANDA:XAGUSD","title":"Bạc"},
-        {"proName":"COMEX:HG1!","title":"Đồng"},
-        {"proName":"TVC:USOIL","title":"Dầu WTI"},
-        {"proName":"TVC:UKOIL","title":"Dầu Brent"},
-        {"proName":"NYMEX:NG1!","title":"Khí tự nhiên"},
-        {"proName":"CBOT:ZS1!","title":"Đậu tương"},
-        {"proName":"CBOT:ZW1!","title":"Lúa mì"},
-        {"proName":"CBOT:ZC1!","title":"Ngô"},
-        {"proName":"ICEEUR:RC1!","title":"Cà phê Robusta"},
-        {"proName":"ICEUS:KC1!","title":"Cà phê Arabica"},
-        {"proName":"ICEUS:SB1!","title":"Đường"},
-        {"proName":"ICEUS:CT1!","title":"Bông"}
-      ],
-      "showSymbolLogo": false,
-      "colorTheme": "dark",
-      "isTransparent": true,
-      "displayMode": "adaptive",
-      "locale": "vi_VN"
-    }
-    </script>
-  </div>
-</div>
+<script type="module" src="https://widgets.tradingview-widget.com/w/vi_VN/tv-ticker-tape.js"></script>
+
+<tv-ticker-tape symbols="BLACKBULL:ARABICA,BLACKBULL:ROBUSTA,BLACKBULL:CORN,BLACKBULL:WHEAT,BLACKBULL:SOYBEAN,BLACKBULL:SUGAR,TVC:GOLD,TVC:SILVER,TVC:PLATINUM,BLACKBULL:COPPER,TVC:USOIL,TVC:UKOIL" show-hover></tv-ticker-tape>
 
 <main class="wrap">
 
