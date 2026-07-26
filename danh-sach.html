@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danh sách — ATB Commodity</title>
+<meta name="description" content="Toàn bộ tin tức và thông báo từ ATB Commodity.">
+<link rel="icon" type="image/png" href="https://pixabay.com/images/download/atb_commodity-logo-10395673_1920.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo-container">
+      <a href="index.html"><img src="https://pixabay.com/images/download/atb_commodity-logo-10395673_1920.png" alt="ATB Commodity" class="logo-img"></a>
+    </div>
+    <nav class="menu" id="mainMenu">
+      <a href="index.html">Trang chủ</a>
+      <a href="index.html#lich-kinh-te">Lịch kinh tế</a>
+      <a href="index.html#tin-tuc">Tin tức 24/7</a>
+      <a href="index.html#mxv">Tin điều hành MXV</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" onclick="toggleMenu()" aria-label="Mở/đóng menu" aria-expanded="false" aria-controls="mainMenu">☰</button>
+    <button class="btn" style="margin-left:8px" onclick="openModal()">Mở tài khoản</button>
+  </div>
+</header>
+
+<main class="wrap" id="listRoot" style="min-height:50vh;padding:30px 20px 60px">
+  <!-- Danh sách bài viết được render bằng assets/main.js dựa vào ?type=news|mxv trên URL -->
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo-container">
+          <img src="https://pixabay.com/images/download/atb_commodity-image-10396136_1920.png" alt="ATB Commodity" class="logo-img">
+        </div>
+        <p>Cổng thông tin thị trường hàng hóa phái sinh: tin tức, lịch kinh tế, tin điều hành MXV và nhận định mỗi ngày.</p>
+      </div>
+      <div>
+        <h4>Chuyên mục</h4>
+        <a href="index.html#lich-kinh-te">Lịch kinh tế</a>
+        <a href="index.html#tin-tuc">Tin tức 24/7</a>
+        <a href="index.html#mxv">Tin điều hành MXV</a>
+        <a href="index.html#ung-dung">Ứng dụng giao dịch</a>
+      </div>
+      <div>
+        <h4>Nhóm hàng</h4>
+        <a href="index.html#tin-tuc">Kim loại</a>
+        <a href="index.html#tin-tuc">Năng lượng</a>
+        <a href="index.html#tin-tuc">Nguyên liệu công nghiệp</a>
+        <a href="index.html#tin-tuc">Nông sản</a>
+      </div>
+      <div>
+        <h4>Liên hệ</h4>
+        <a href="#">Zalo tư vấn 1-1</a>
+        <a href="https://www.facebook.com/61591198703187" target="_blank" rel="noopener">Fanpage ATB Commodity</a>
+        <a href="https://m.me/1218581484662800" target="_blank" rel="noopener">Chat Messenger</a>
+        <a href="#">Email hợp tác</a>
+      </div>
+    </div>
+    <div class="foot-legal">
+      © 2026 ATB Commodity · Since 2017. Nội dung trên website chỉ mang tính chất tham khảo, không phải khuyến nghị đầu tư. Giao dịch hàng hóa phái sinh tiềm ẩn rủi ro; nhà đầu tư cần cân nhắc kỹ trước khi tham gia thị trường.
+    </div>
+  </div>
+</footer>
+
+<!-- MESSENGER CHAT: liên kết trực tiếp tới fanpage ATB Commodity -->
+<a class="msgr-fab" href="https://m.me/1218581484662800" target="_blank" rel="noopener" aria-label="Chat qua Messenger với ATB Commodity">
+  <span class="msgr-fab-label">Chat với ATB Commodity</span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+  </svg>
+</a>
+
+<!-- POPUP: MỞ TÀI KHOẢN -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="close" onclick="closeModal()" aria-label="Đóng">×</button>
+    <div id="modalForm">
+      <div class="modal-head">
+        <img src="https://pixabay.com/images/download/atb_commodity-logo-10395673_1920.png" alt="ATB Commodity" class="modal-logo">
+        <h3 id="modalTitle">Đăng ký tư vấn mở tài khoản</h3>
+        <p>Để lại thông tin, đội ngũ ATB Commodity sẽ liên hệ trong vòng 24 giờ làm việc.</p>
+      </div>
+      <div class="field">
+        <label for="fName">Họ và tên</label>
+        <input id="fName" type="text" placeholder="Nguyễn Văn A" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="fEmail">Email</label>
+        <input id="fEmail" type="email" placeholder="email@example.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="fPhone">Số điện thoại</label>
+        <input id="fPhone" type="tel" placeholder="09xx xxx xxx" autocomplete="tel">
+      </div>
+      <button class="btn" id="submitBtn" onclick="submitLead()">Gửi thông tin</button>
+      <p class="form-error" id="formError" style="display:none"></p>
+      <p class="modal-note">Thông tin của bạn được bảo mật và chỉ dùng cho mục đích tư vấn.</p>
+    </div>
+    <div class="modal-success" id="modalSuccess">
+      <div class="ok">✓</div>
+      <h3>Đã nhận thông tin!</h3>
+      <p>Cảm ơn bạn đã đăng ký. Đội ngũ ATB Commodity sẽ liên hệ với bạn sớm nhất qua số điện thoại hoặc email đã cung cấp.</p>
+    </div>
+  </div>
+</div>
+
+<script src="data/articles.js"></script>
+<script src="assets/main.js"></script>
+</body>
+</html>

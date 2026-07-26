@@ -65,6 +65,10 @@ function splitDate(d){
   const parts=d.split('/'); // "dd/mm/yyyy" -> ["dd","mm","yyyy"]
   return {day:parts[0], monthYear:parts[1]+'/'+parts[2]};
 }
+function parseDate(d){
+  const [dd,mm,yyyy]=d.split('/').map(Number);
+  return new Date(yyyy,mm-1,dd);
+}
 
 /* ===== TRANG CHỦ: RENDER "TIN TỨC 24/7" TỪ data/articles.js ===== */
 function renderNewsGrid(){
@@ -154,6 +158,45 @@ function renderArticlePage(){
     <a class="btn ghost article-back" href="index.html">← Quay lại trang chủ</a>`;
 }
 
+/* ===== TRANG DANH SÁCH (danh-sach.html?type=news|mxv) ===== */
+function renderListPage(){
+  const el=document.getElementById('listRoot');
+  if(!el || typeof ARTICLES==='undefined')return;
+
+  const type=new URLSearchParams(location.search).get('type')==='mxv'?'mxv':'news';
+  const isNews=type==='news';
+  const items=ARTICLES.filter(a=>a.type===type).sort((a,b)=>parseDate(b.date)-parseDate(a.date));
+
+  const pageTitle=isNews?'Tin tức 24/7':'Tin điều hành MXV';
+  document.title=pageTitle+' — ATB Commodity';
+
+  const listHTML=!items.length
+    ? '<p style="color:var(--muted)">Chưa có bài viết nào.</p>'
+    : isNews
+      ? `<div class="news-grid-flat">${items.map(a=>`
+          <article class="news-card">
+            <div class="news-body">
+              <span class="tag ${a.tagClass||''}">${a.category}</span>
+              <h3><a href="bai-viet.html?slug=${encodeURIComponent(a.slug)}">${a.title}</a></h3>
+              <div class="meta"><span>${a.date}</span>${a.meta2?`<span>·</span><span>${a.meta2}</span>`:''}</div>
+            </div>
+          </article>`).join('')}</div>`
+      : `<div class="mxv-list">${items.map(a=>{
+          const {day,monthYear}=splitDate(a.date);
+          return `<a class="mxv-item" href="bai-viet.html?slug=${encodeURIComponent(a.slug)}">
+            <div class="mxv-date"><b>${day}</b>${monthYear}</div>
+            <div><h3>${a.title}</h3><small>${a.note||''}</small></div>
+          </a>`;
+        }).join('')}</div>`;
+
+  el.innerHTML=`
+    <div class="breadcrumb"><a href="index.html">Trang chủ</a> / <span>${pageTitle}</span></div>
+    <div class="sec-head"><div><h2>${isNews?'Tin tức <span>24/7</span>':'Tin điều hành <span>MXV</span>'}</h2></div></div>
+    ${listHTML}
+    <a class="btn ghost article-back" style="margin-top:30px" href="index.html">← Quay lại trang chủ</a>`;
+}
+
 renderNewsGrid();
 renderMxvList();
 renderArticlePage();
+renderListPage();
