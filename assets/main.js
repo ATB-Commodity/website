@@ -146,6 +146,14 @@ function renderArticlePage(){
     ? `<div class="article-disclaimer">⚠️ <b>Miễn trừ trách nhiệm:</b> Nội dung trên chỉ mang tính chất tham khảo, không phải khuyến nghị đầu tư. Giao dịch hàng hóa phái sinh có rủi ro; nhà đầu tư tự chịu trách nhiệm với quyết định của mình.</div>`
     : '';
 
+  const attachment=a.attachment
+    ? `<div class="article-attachment">
+        <div class="icon">📎</div>
+        <div class="info"><b>${a.attachment.name}</b><span>Mở trong tab mới</span></div>
+        <a class="btn" href="${a.attachment.url}" target="_blank" rel="noopener">Xem</a>
+      </div>`
+    : '';
+
   el.innerHTML=`
     <div class="breadcrumb"><a href="index.html">Trang chủ</a> / <span>${catLabel}</span></div>
     <article class="article-detail">
@@ -153,6 +161,7 @@ function renderArticlePage(){
       <h1>${a.title}</h1>
       <div class="meta">${metaLine}</div>
       <div class="article-body">${a.body}</div>
+      ${attachment}
       ${disclaimer}
     </article>
     <a class="btn ghost article-back" href="index.html">← Quay lại trang chủ</a>`;

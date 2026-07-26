@@ -23,6 +23,11 @@
 
   Riêng "mxv":
     note      : ghi chú hiệu lực/áp dụng hiển thị dưới tiêu đề
+
+  Tùy chọn (news hoặc mxv):
+    attachment: { name, url } — hiện 1 khối "file đính kèm/nguồn tham
+    khảo" cuối bài, có nút "Xem" mở url trong tab mới. Dùng để dẫn tới
+    văn bản gốc/PDF khi không tiện đăng lại toàn văn.
 */
 
 window.ARTICLES = [
@@ -104,6 +109,29 @@ window.ARTICLES = [
   },
 
   // ===== TIN ĐIỀU HÀNH MXV =====
+  {
+    slug: "ap-dung-ty-gia-ngoai-te-22-07-2026",
+    type: "mxv",
+    title: "Thông báo áp dụng tỷ giá ngoại tệ kể từ ngày 22/07/2026",
+    date: "22/07/2026",
+    note: "Theo quyết định của Sở Giao dịch Hàng hóa Việt Nam (MXV)",
+    body: `
+      <p>Sở Giao dịch Hàng hóa Việt Nam (MXV) thông báo áp dụng tỷ giá ngoại tệ mới cho các giao dịch hàng hóa phái sinh, có hiệu lực từ các phiên giao dịch kể từ ngày 22/07/2026.</p>
+      <p><em>Đây là bản tin dẫn nguồn theo quyết định của MXV. Bảng tỷ giá chi tiết theo từng loại ngoại tệ vui lòng liên hệ đội ngũ ATB Commodity để được cung cấp và cập nhật chính xác.</em></p>
+    `
+  },
+  {
+    slug: "646-qd-tgd-mxv-muc-ky-quy-giao-dich-hang-hoa",
+    type: "mxv",
+    title: "646/QĐ/TGĐ-MXV: Quyết định ban hành mức ký quỹ giao dịch hàng hóa tại Sở Giao dịch Hàng hóa Việt Nam",
+    date: "24/07/2026",
+    note: "Xem chi tiết mức ký quỹ theo từng hợp đồng tại văn bản gốc",
+    attachment: { name: "Văn bản quyết định 646/QĐ/TGĐ-MXV (nguồn: hct.vn)", url: "https://hct.vn/tin-tuc-mxv/646-qd-tgd-mxv-quyet-dinh-ban-hanh-muc-ky-quy-giao-dich-hang-hoa-tai-so-giao-dich-hang-hoa-viet-nam-6743" },
+    body: `
+      <p>Sở Giao dịch Hàng hóa Việt Nam (MXV) ban hành quyết định số 646/QĐ/TGĐ-MXV quy định mức ký quỹ giao dịch hàng hóa áp dụng tại Sở.</p>
+      <p><em>Đây là bản tin dẫn nguồn. Mức ký quỹ cụ thể theo từng hợp đồng, ngày hiệu lực và phạm vi áp dụng chi tiết vui lòng xem tại văn bản gốc ở khối đính kèm bên dưới, hoặc liên hệ đội ngũ ATB Commodity để được hỗ trợ tra cứu.</em></p>
+    `
+  },
   {
     slug: "dieu-chinh-ky-quy-kim-loai-nang-luong",
     type: "mxv",
