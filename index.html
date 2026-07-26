@@ -106,20 +106,22 @@ section{padding:52px 0}
 .mxv-item h3{font-size:14.5px;font-weight:700;color:var(--navy);line-height:1.45}
 .mxv-item small{display:block;margin-top:4px;font-size:12px;color:var(--muted)}
 
-/* Nhận định thị trường */
-.view-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
-.view-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px}
-.view-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.view-top b{font-size:16px;color:var(--navy)}
-.trend{font-size:11px;font-weight:800;letter-spacing:1px;padding:4px 12px;border-radius:99px}
-.trend.tang{background:#e8f7ee;color:#15803d}
-.trend.giam{background:#fdecec;color:var(--red)}
-.trend.trung-lap{background:#fef3e2;color:#b45309}
-.view-card p{font-size:13.5px;color:var(--ink);line-height:1.65;margin-bottom:12px}
-.rec{background:#f2f8fd;border:1px solid var(--line);border-radius:10px;padding:11px 14px;font-size:13px;line-height:1.55}
-.rec b{color:var(--teal);text-transform:uppercase;font-size:11px;letter-spacing:.8px;display:block;margin-bottom:4px}
-.view-time{margin-top:12px;font-size:11.5px;color:#93a8bc}
-.disclaimer-inline{margin-top:22px;font-size:12.5px;color:var(--muted);background:#fef8ec;border:1px solid #f3e3bd;border-radius:10px;padding:12px 16px;line-height:1.6}
+/* Ứng dụng giao dịch đáng tin cậy */
+.app-list{display:flex;flex-direction:column;gap:20px}
+.app-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px 28px;display:flex;align-items:center;gap:28px;transition:.15s}
+.app-card:hover{box-shadow:0 10px 30px rgba(18,58,99,.1)}
+.app-card.recommended{border-color:var(--red);box-shadow:0 10px 30px rgba(225,31,36,.1)}
+.app-badge{position:absolute;top:-11px;left:24px;background:var(--red);color:#fff;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:5px 14px;border-radius:99px;box-shadow:0 4px 10px rgba(225,31,36,.35)}
+.app-brand{flex:0 0 150px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px}
+.app-logo{width:64px;height:64px;border-radius:16px;object-fit:cover;border:1px solid var(--line)}
+.app-brand b{font-size:14.5px;color:var(--navy);font-weight:800}
+.app-stars{font-size:13px;font-weight:700;color:#b45309}
+.app-stars small{color:#93a8bc;font-weight:500}
+.app-points{flex:1;list-style:none;display:flex;flex-direction:column;gap:9px}
+.app-points li{font-size:13.5px;color:var(--ink);line-height:1.5;padding-left:25px;position:relative}
+.app-points li::before{content:"✓";position:absolute;left:0;top:1px;color:#15803d;font-weight:800;background:#e8f7ee;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px}
+.app-cta{flex:0 0 190px}
+.app-cta .btn{width:100%;text-align:center;white-space:nowrap}
 
 /* CTA */
 .cta{background:linear-gradient(120deg,var(--navy-deep),var(--navy) 55%,#1a5a8a);border-radius:20px;padding:46px 50px;display:flex;align-items:center;justify-content:space-between;gap:30px;color:#fff}
@@ -177,9 +179,15 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
   .nav{gap:14px}
   .hero{grid-template-columns:1fr;gap:28px;padding:36px 0 32px}
   .hero h1{font-size:30px}
-  .news-grid,.view-grid{grid-template-columns:1fr}
+  .news-grid{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr}
   section{padding:38px 0}
+
+  .app-card{flex-direction:column;align-items:stretch;text-align:center;padding:22px 20px;gap:16px}
+  .app-brand{flex:none}
+  .app-points{text-align:left}
+  .app-cta{flex:none}
+  .app-badge{left:50%;transform:translateX(-50%)}
 
   .menu-toggle{display:inline-block}
   nav.menu{
@@ -352,42 +360,77 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
     </div>
   </section>
 
-  <!-- NHẬN ĐỊNH THỊ TRƯỜNG -->
-  <section id="nhan-dinh">
+  <!-- ỨNG DỤNG GIAO DỊCH ĐÁNG TIN CẬY -->
+  <section id="ung-dung">
     <div class="sec-head">
       <div>
-        <h2>Nhận định <span>thị trường</span></h2>
-        <p class="sec-sub">Góc nhìn mỗi ngày của đội ngũ ATB theo từng nhóm hàng — xu hướng, yếu tố cần theo dõi và khuyến nghị chung.</p>
-      </div>
-      <a class="more" href="#">Nhận định các phiên trước →</a>
-    </div>
-    <div class="view-grid">
-      <div class="view-card">
-        <div class="view-top"><b>🥇 Kim loại</b><span class="trend tang">XU HƯỚNG TĂNG</span></div>
-        <p>Bạc giữ vững trên vùng 60 USD/oz với thanh khoản cải thiện; vàng giằng co quanh đỉnh chờ kỳ họp Fed. Đồng chịu áp lực nhẹ từ số liệu sản xuất Trung Quốc.</p>
-        <div class="rec"><b>Khuyến nghị</b>Ưu tiên chiến lược thuận xu hướng với nhóm kim loại quý; hạn chế mở vị thế mới trước thời điểm công bố lãi suất. Quản trị tỷ trọng chặt chẽ.</div>
-        <div class="view-time">Cập nhật 09:00 · 26/07/2026</div>
-      </div>
-      <div class="view-card">
-        <div class="view-top"><b>🛢️ Năng lượng</b><span class="trend trung-lap">TRUNG LẬP</span></div>
-        <p>Dầu WTI hồi phục kỹ thuật sau báo cáo tồn kho EIA, nhưng vẫn nằm trong biên độ đi ngang của ba tuần gần nhất. Khí tự nhiên thiếu động lực rõ ràng.</p>
-        <div class="rec"><b>Khuyến nghị</b>Chờ giá xác nhận thoát khỏi vùng đi ngang trước khi hành động; ưu tiên quan sát các mốc tồn kho và tin địa chính trị.</div>
-        <div class="view-time">Cập nhật 09:00 · 26/07/2026</div>
-      </div>
-      <div class="view-card">
-        <div class="view-top"><b>☕ Nguyên liệu công nghiệp</b><span class="trend giam">ĐIỀU CHỈNH</span></div>
-        <p>Robusta London điều chỉnh sau chuỗi tăng, trong khi giá cà phê nội địa vẫn neo cao do nguồn cung hạn chế. Hồ tiêu duy trì đà tăng ổn định.</p>
-        <div class="rec"><b>Khuyến nghị</b>Thận trọng với vị thế mua đuổi ở vùng giá cao; nhà đầu tư nắm giữ hàng thực có thể cân nhắc phương án bảo hiểm giá.</div>
-        <div class="view-time">Cập nhật 09:00 · 26/07/2026</div>
-      </div>
-      <div class="view-card">
-        <div class="view-top"><b>🌾 Nông sản</b><span class="trend tang">XU HƯỚNG TĂNG</span></div>
-        <p>Đậu tương tăng phiên thứ ba liên tiếp nhờ lo ngại thời tiết tại Midwest; lúa mì và ngô đi lên theo. Báo cáo USDA cuối tháng là biến số chính.</p>
-        <div class="rec"><b>Khuyến nghị</b>Xu hướng ngắn hạn nghiêng về phía tăng nhưng phụ thuộc thời tiết; theo dõi sát dự báo và báo cáo mùa vụ trước khi gia tăng tỷ trọng.</div>
-        <div class="view-time">Cập nhật 09:00 · 26/07/2026</div>
+        <h2>Ứng dụng giao dịch <span>đáng tin cậy</span></h2>
+        <p class="sec-sub">Các nền tảng giao dịch hàng hóa phái sinh liên thông MXV được ATB Commodity đồng hành và nhiều nhà đầu tư tin dùng.</p>
       </div>
     </div>
-    <div class="disclaimer-inline">⚠️ <b>Miễn trừ trách nhiệm:</b> Nhận định trên chỉ mang tính tham khảo, không phải lời khuyên đầu tư. Giao dịch hàng hóa phái sinh có rủi ro; nhà đầu tư tự chịu trách nhiệm với quyết định của mình.</div>
+    <div class="app-list">
+      <div class="app-card">
+        <div class="app-brand">
+          <img src="https://play-lh.googleusercontent.com/vjWRvb5ihvihvj8bxgr53elXXs87ZurE0R3uYN5qnD_48-xnEgEP2HCRlzD1L8YRPCCTkoNUypo0eI_x71EwmQ=w240-h480-rw" alt="GCL Trading" class="app-logo">
+          <b>GCL Trading</b>
+          <span class="app-stars">★ 4.5<small>/5</small></span>
+        </div>
+        <ul class="app-points">
+          <li>Thành viên kinh doanh giữ vững TOP1 tại MXV nhiều năm liền</li>
+          <li>Giao diện thông minh, tối ưu trải nghiệm cho cả nhà đầu tư mới lẫn chuyên nghiệp</li>
+          <li>Đa dạng hóa danh mục đầu tư hiệu quả với chi phí bắt đầu cực thấp</li>
+        </ul>
+        <div class="app-cta">
+          <a class="btn" href="https://trade.hitechfinance.vn/accountregister?refcustodycd=03666888" target="_blank" rel="noopener">Mở tài khoản</a>
+        </div>
+      </div>
+      <div class="app-card recommended">
+        <span class="app-badge">Khuyên dùng</span>
+        <div class="app-brand">
+          <img src="https://play-lh.googleusercontent.com/AiSqxR6uY3SyVwIPjg6z6_0ZcKm4UQBTYNqxI9yrrCb6ePKR8OurczpTLyopnMUzS-A6O7w_RQ0SJxSNUcqgIA=w240-h480-rw" alt="HTF Trading" class="app-logo">
+          <b>HTF Trading</b>
+          <span class="app-stars">★ 5.0<small>/5</small></span>
+        </div>
+        <ul class="app-points">
+          <li>TOP thành viên kinh doanh uy tín của Sở Giao Dịch Hàng Hóa Việt Nam</li>
+          <li>Nạp tiền tức thì, rút tiền nhanh chóng, quản lý dòng tiền và ký quỹ an toàn 24/7</li>
+          <li>Khởi động hành trình đầu tư hàng hóa quốc tế chỉ với vốn 10 triệu đồng</li>
+        </ul>
+        <div class="app-cta">
+          <a class="btn" href="https://trade.hitechfinance.vn/accountregister?refcustodycd=03666888" target="_blank" rel="noopener">Mở tài khoản</a>
+        </div>
+      </div>
+      <div class="app-card">
+        <div class="app-brand">
+          <img src="https://play-lh.googleusercontent.com/vzokMEvvu2aHpTAGBPl-InYr2X5bjtNUh5OlO-VcE5MQKZdU04SNPnz2pVaqOWKHS5arlQX98xuQp70V6dy_aA=w240-h480-rw" alt="HCT Trading" class="app-logo">
+          <b>HCT Trading</b>
+          <span class="app-stars">★ 4.0<small>/5</small></span>
+        </div>
+        <ul class="app-points">
+          <li>Cơ hội gia tăng lợi nhuận 24/5 từ thị trường hàng hóa toàn cầu rộng lớn</li>
+          <li>Cập nhật bảng giá real-time không độ trễ ngay trên điện thoại</li>
+          <li>Giao dịch 2 chiều, tối ưu cơ hội đầu tư</li>
+        </ul>
+        <div class="app-cta">
+          <a class="btn" href="https://trade.hct.vn/accountregister?refcustodycd=012012675" target="_blank" rel="noopener">Mở tài khoản</a>
+        </div>
+      </div>
+      <div class="app-card">
+        <div class="app-brand">
+          <img src="https://play-lh.googleusercontent.com/jLbHxCmw5NocBG4GiE7uvuUZc07btgZu6VDATzaBB6an5YTQV5T3k_1_6Ui6SwRWopfdtGXbhIgVeL22tR0Jcg=w240-h480-rw" alt="SFVN" class="app-logo">
+          <b>SFVN</b>
+          <span class="app-stars">★ 4.0<small>/5</small></span>
+        </div>
+        <ul class="app-points">
+          <li>Thiết kế tối ưu cho Nano Size</li>
+          <li>Giao dịch T+0 linh hoạt, chốt lời ngay trong ngày không cần chờ đợi</li>
+          <li>Nắm bắt biến động của Bạc, Bạch Kim và Đồng mọi lúc mọi nơi</li>
+        </ul>
+        <div class="app-cta">
+          <a class="btn" href="https://onboarding.sfvn-invest.com.vn/register?code=T4U" target="_blank" rel="noopener">Mở tài khoản</a>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- CTA -->
@@ -417,7 +460,7 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
         <a href="#lich-kinh-te">Lịch kinh tế</a>
         <a href="#tin-tuc">Tin tức 24/7</a>
         <a href="#mxv">Tin điều hành MXV</a>
-        <a href="#nhan-dinh">Nhận định thị trường</a>
+        <a href="#ung-dung">Ứng dụng giao dịch</a>
       </div>
       <div>
         <h4>Nhóm hàng</h4>
