@@ -168,8 +168,8 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
     align-items: center;
   }
   .logo-img {
-    width: auto;
-    height: auto;
+    width: 75px;
+    height: 75px;
   }
 </style>
     <nav class="menu">
@@ -204,11 +204,9 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
 
 <!-- BẢNG GIÁ: TradingView Market Overview widget -->
 <div>
-  <script type="module" src="https://widgets.tradingview-widget.com/w/vi/tv-market-overview.js" async></script>
-  <tv-market-overview
-    style="display:block; width:100%; height:450px"
-    symbol-sectors='[{"sectionName":"Hàng hóa","symbols":["TVC:GOLD","TVC:SILVER","TVC:PLATINUM","CMCMARKETS:COPPER","CMCMARKETS:CORN","PEPPERSTONE:WHEAT","CMCMARKETS:SOYBEAN","BLACKBULL:ROBUSTA","BLACKBULL:ARABICA","FOREXCOM:SUGAR"]}]'>
-  </tv-market-overview>
+<script type="module" src="https://widgets.tradingview-widget.com/w/vi_VN/tv-market-data.js"></script>
+
+<tv-market-data symbol-sectors='[{"sectionName":"Commodity","symbols":["TVC:GOLD","TVC:SILVER","TVC:PLATINUM","FX:COPPER","BLACKBULL:ROBUSTA","BLACKBULL:ARABICA","CMCMARKETS:CORN","SPARKS:WHEAT","CMCMARKETS:SOYBEAN","WHSELFINVEST:SOYBEANOIL","CAPITALCOM:SOYBEANMEAL","FOREXCOM:SUGAR"]}]' style="width: 850px; height: 467px"></tv-market-data>
 </div>
 
   <!-- LỊCH KINH TẾ -->
