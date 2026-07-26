@@ -247,16 +247,22 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
       <p class="lead">Tin tức 24/7 theo 4 nhóm hàng MXV, lịch kinh tế quan trọng, tin điều hành từ Sở Giao dịch Hàng hóa Việt Nam và nhận định thị trường mỗi ngày từ đội ngũ ATB.</p>
       <div class="hero-cta">
         <button class="btn" onclick="openModal()">Mở tài khoản giao dịch</button>
-        <a class="btn ghost" href="#tin-tuc">Đọc bản tin hôm nay</a>
+        <a class="btn ghost" href="https://zalo.me/g/chbvho189" target="_blank" rel="noopener noreferrer">Tham gia Cộng Đồng ATB Commodity</a>
       </div>
       <p class="hero-note">✓ Miễn phí bản tin hằng ngày &nbsp;·&nbsp; ✓ Hỗ trợ 1-1 qua Zalo &nbsp;·&nbsp; ✓ Đồng hành từ 2017</p>
     </div>
 
 <!-- BẢNG GIÁ: TradingView Market Overview widget -->
 <div>
-<script type="module" src="https://widgets.tradingview-widget.com/w/vi_VN/tv-market-data.js"></script>
+<div style="display: flex; flex-direction: column; height: 100%; width: 100%;">
+  <script type="module" src="https://widgets.tradingview-widget.com/w/vi_VN/tv-market-overview.js"></script>
 
-<tv-market-data symbol-sectors='[{"sectionName":"Commodity","symbols":["TVC:GOLD","TVC:SILVER","TVC:PLATINUM","FX:COPPER","BLACKBULL:ROBUSTA","BLACKBULL:ARABICA","CMCMARKETS:CORN","SPARKS:WHEAT","CMCMARKETS:SOYBEAN","WHSELFINVEST:SOYBEANOIL","CAPITALCOM:SOYBEANMEAL","FOREXCOM:SUGAR"]}]' class="tv-board"></tv-market-data>
+  <tv-market-overview 
+    symbol-sectors='[{"sectionName":"Kim Loại","symbols":["PEPPERSTONE:XAUUSD","PEPPERSTONE:XAGUSD","SKILLING:PLATINUM","SKILLING:COPPER","SWISSQUOTE:OILUSD"]},{"sectionName":"Nông Sản","symbols":["SKILLING:WHEAT","SKILLING:CORN","FUSIONMARKETS:SOYBEAN","WHSELFINVEST:SOYBEANOIL"]},{"sectionName":"Nguyên Liệu Công Nghiệp","symbols":["BLACKBULL:ROBUSTA","BLACKBULL:ARABICA","BLACKBULL:COCOA","BLACKBULL:COTTON","BLACKBULL:SUGAR"]}]' 
+    class="tv-board"
+    style="width: 100%; height: 100%; flex: 1; display: block;"
+  ></tv-market-overview>
+</div>
 </div>
   </div>
 
