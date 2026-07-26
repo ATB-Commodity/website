@@ -158,10 +158,20 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
 
 <header>
   <div class="wrap nav">
-    <a class="logo" href="#">
-      <div class="badge"><b>atb</b><span>COMMODITY</span></div>
-      <div class="logo-text"><b>ATB COMMODITY</b><small>Since 2017</small></div>
-    </a>
+<div class="logo-container">
+  <img src="https://i.pinimg.com/736x/6c/ef/18/6cef18c55dbcbe10dd9f663ba313936f.jpg" alt="ATB Commodity" class="logo-img">
+</div>
+
+<style>
+  .logo-container {
+    display: flex;
+    align-items: center;
+  }
+  .logo-img {
+    width: 150px;
+    height: auto;
+  }
+</style>
     <nav class="menu">
       <a href="#" class="active">Trang chủ</a>
       <a href="#lich-kinh-te">Lịch kinh tế</a>
@@ -193,47 +203,9 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
     </div>
 
     <!-- BẢNG GIÁ: TradingView Market Quotes widget -->
-    <div class="board-card">
-      <div class="bar">BẢNG GIÁ HÀNG HÓA <span>Realtime · TradingView</span></div>
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
-        {
-          "width": "100%",
-          "height": 420,
-          "symbolsGroups": [
-            {"name":"Kim loại","symbols":[
-              {"name":"OANDA:XAUUSD","displayName":"Vàng"},
-              {"name":"OANDA:XAGUSD","displayName":"Bạc"},
-              {"name":"COMEX:HG1!","displayName":"Đồng"},
-              {"name":"COMEX:PL1!","displayName":"Bạch kim"}
-            ]},
-            {"name":"Năng lượng","symbols":[
-              {"name":"TVC:USOIL","displayName":"Dầu WTI"},
-              {"name":"TVC:UKOIL","displayName":"Dầu Brent"},
-              {"name":"NYMEX:NG1!","displayName":"Khí tự nhiên"}
-            ]},
-            {"name":"Nông sản","symbols":[
-              {"name":"CBOT:ZS1!","displayName":"Đậu tương"},
-              {"name":"CBOT:ZW1!","displayName":"Lúa mì"},
-              {"name":"CBOT:ZC1!","displayName":"Ngô"}
-            ]},
-            {"name":"Nguyên liệu CN","symbols":[
-              {"name":"ICEEUR:RC1!","displayName":"Cà phê Robusta"},
-              {"name":"ICEUS:KC1!","displayName":"Cà phê Arabica"},
-              {"name":"ICEUS:SB1!","displayName":"Đường"},
-              {"name":"ICEUS:CT1!","displayName":"Bông"}
-            ]}
-          ],
-          "showSymbolLogo": false,
-          "colorTheme": "light",
-          "isTransparent": false,
-          "locale": "vi_VN"
-        }
-        </script>
-      </div>
-    </div>
-  </div>
+    <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-market-overview.js"></script>
+
+<tv-market-overview symbol-sectors='[{"sectionName":"Commodity","symbols":["TVC:GOLD","TVC:SILVER","TVC:PLATINUM","CMCMARKETS:COPPER","CMCMARKETS:CORN","PEPPERSTONE:WHEAT","CMCMARKETS:SOYBEAN","FOREXCOM:SOYUSD","BLACKBULL:ROBUSTA","BLACKBULL:ARABICA","FOREXCOM:SUGAR"]}]' assets-type="crypto"></tv-market-overview>
 
   <!-- LỊCH KINH TẾ -->
   <section id="lich-kinh-te">
@@ -243,22 +215,7 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
         <p class="sec-sub">Các sự kiện vĩ mô quan trọng ảnh hưởng trực tiếp đến giá hàng hóa: lãi suất Fed, CPI, tồn kho EIA, báo cáo USDA…</p>
       </div>
     </div>
-    <div class="widget-frame">
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-        {
-          "width": "100%",
-          "height": 480,
-          "colorTheme": "light",
-          "isTransparent": false,
-          "locale": "vi_VN",
-          "importanceFilter": "0,1",
-          "countryFilter": "us,cn,eu,vn,jp"
-        }
-        </script>
-      </div>
-    </div>
+    <iframe src="https://tool.fastbull.com/vi/calendar?theme=white&ftToken=f4facccde9ed4374a9b82cdea31bc9c4" frameborder="0" width="100%" height="100%"></iframe>
   </section>
 
   <!-- TIN TỨC 24/7 -->
