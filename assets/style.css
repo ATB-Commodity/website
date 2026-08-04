@@ -65,6 +65,7 @@ section{padding:52px 0}
 .sec-head a.more:hover{color:var(--red)}
 .sec-sub{font-size:14px;color:var(--muted);margin-top:6px;max-width:600px}
 .widget-frame{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.chart-frame{width:100%;height:560px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
 
 /* News */
 .news-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:20px}
@@ -223,6 +224,7 @@ footer{margin-top:60px;background:var(--navy-deep);color:#9fbbd4;padding:44px 0 
 
   .tv-board{height:380px}
   .calendar-frame{height:460px}
+  .chart-frame{height:440px}
 
   .cta{flex-direction:column;text-align:center;padding:36px 24px}
 }

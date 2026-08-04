@@ -79,6 +79,51 @@
     <div class="news-grid" id="newsGrid"></div>
   </section>
 
+  <!-- BIỂU ĐỒ GIÁ -->
+  <section id="bieu-do">
+    <div class="sec-head">
+      <div>
+        <h2>Biểu đồ <span>giá</span></h2>
+        <p class="sec-sub">Theo dõi biến động giá theo thời gian thực, tích hợp công cụ phân tích kỹ thuật từ TradingView.</p>
+      </div>
+    </div>
+    <div class="chart-frame">
+      <!-- TradingView Widget BEGIN -->
+      <div class="tradingview-widget-container" style="height:100%;width:100%">
+        <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+        {
+        "allow_symbol_change": false,
+        "calendar": false,
+        "details": true,
+        "hide_side_toolbar": true,
+        "hide_top_toolbar": true,
+        "hide_legend": true,
+        "hide_volume": false,
+        "hotlist": false,
+        "interval": "60",
+        "locale": "vi_VN",
+        "save_image": false,
+        "style": "1",
+        "symbol": "TVC:SILVER",
+        "theme": "light",
+        "timezone": "Asia/Ho_Chi_Minh",
+        "backgroundColor": "#ffffff",
+        "gridColor": "rgba(46, 46, 46, 0.06)",
+        "watchlist": [],
+        "withdateranges": false,
+        "compareSymbols": [],
+        "studies": [
+          "STD;MA%1Cross"
+        ],
+        "autosize": true
+      }
+        </script>
+      </div>
+      <!-- TradingView Widget END -->
+    </div>
+  </section>
+
   <!-- TIN ĐIỀU HÀNH MXV -->
   <section id="mxv">
     <div class="sec-head">
