@@ -107,6 +107,21 @@ window.ARTICLES = [
       <p>Nhà đầu tư nên theo dõi sát lịch kinh tế trong tuần và cân nhắc quản trị rủi ro chặt chẽ trước các thời điểm công bố dữ liệu quan trọng.</p>
     `
   },
+  {
+    slug: "dau-tuong-giam-manh-tuan-giao-dich",
+    type: "news",
+    category: "Nông sản",
+    tagClass: "green",
+    title: "Giá đậu tương giảm mạnh 5,6% trong tuần giao dịch vừa qua",
+    excerpt: "Đậu tương hợp đồng tháng 09/2026 mất 5,6% trong tuần khi khối lượng bán áp đảo, dù Trung Quốc đã mua thêm đậu nành Mỹ cuối tháng 7.",
+    date: "03/08/2026",
+    attachment: { name: "Nguồn: commodities.vn", url: "https://commodities.vn/gia-dau-tuong-giam-manh-5-6-trong-tuan-giao-dich-vua-qua/" },
+    body: `
+      <p>Giá đậu tương hợp đồng kỳ hạn tháng 09/2026 giảm mạnh 5,6% (tương đương khoảng 70 điểm) trong tuần giao dịch vừa qua, khi khối lượng bán ra áp đảo lực mua và xóa sạch phần tăng đã ghi nhận ở tuần trước đó.</p>
+      <p>Diễn biến giảm diễn ra dù các cơ quan chính phủ Trung Quốc đã mua ít nhất 14 lô đậu nành Mỹ (ước tính khoảng 840.000 tấn) vào cuối tháng 7. Tuy nhiên, giá chào bán từ Brazil vẫn rẻ hơn khiến phần lớn nhà nhập khẩu thương mại tiếp tục ưu tiên nguồn cung Nam Mỹ, hạn chế tác động tích cực từ lực mua của Trung Quốc lên giá.</p>
+      <p>Về mặt kỹ thuật, vùng 1160–1175 đang đóng vai trò hỗ trợ gần nhất; nếu ngưỡng này bị phá vỡ, giá có thể tiếp tục điều chỉnh về vùng 1150.</p>
+    `
+  },
 
   // ===== TIN ĐIỀU HÀNH MXV =====
   {
