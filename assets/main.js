@@ -75,6 +75,7 @@ function parseDate(d){
 // Chưa cấu hình (để nguyên placeholder) thì site tự hiện dữ liệu mẫu có nhãn "DỮ LIỆU MẪU".
 const SIGNALS_SHEET_ID = "146SPjk_Oa1aWCLUJZh2NqGpjarNIL9ZegUB4DELrKcY";
 const SIGNALS_SHEET_NAME = "Sheet1";
+const SIGNALS_MAX_COUNT = 6; // chỉ hiện N lệnh mới nhất trên trang chủ
 
 // Đúng 9 trường webhook TradingView gửi qua Make.com: action, tradeType,
 // ticker, entry, price, sl, tp1, tp2, tp3 — cột "Time" là tùy chọn (Make.com
@@ -136,7 +137,9 @@ async function renderSignals(){
       ticker:get(row,'Ticker'), time:get(row,'Time'), action:get(row,'Action'), tradeType:get(row,'TradeType'),
       entry:get(row,'Entry'), price:get(row,'Price'), sl:get(row,'SL'),
       tp1:get(row,'TP1'), tp2:get(row,'TP2'), tp3:get(row,'TP3')
-    })).filter(s=>s.ticker);
+    })).filter(s=>s.ticker)
+      .reverse() // dòng thêm sau nằm dưới trong Sheet -> đảo lại để lệnh mới nhất hiện đầu tiên
+      .slice(0, SIGNALS_MAX_COUNT);
 
     el.innerHTML = signals.length
       ? signals.map(s=>signalCardHTML(s,false)).join('')
