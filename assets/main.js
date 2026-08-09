@@ -70,33 +70,80 @@ function parseDate(d){
   return new Date(yyyy,mm-1,dd);
 }
 
-/* ===== TRANG CHỦ: RENDER "TIN TỨC 24/7" TỪ data/articles.js ===== */
-function renderNewsGrid(){
-  const el=document.getElementById('newsGrid');
-  if(!el || typeof ARTICLES==='undefined')return;
+/* ===== TRANG CHỦ: RENDER "KHUYẾN NGHỊ GIAO DỊCH" (tín hiệu TradingView qua Make.com) ===== */
+// Dán Sheet ID vào đây sau khi tạo Google Sheet (đoạn giữa /d/ và /edit trên URL).
+// Chưa cấu hình (để nguyên placeholder) thì site tự hiện dữ liệu mẫu có nhãn "DỮ LIỆU MẪU".
+const SIGNALS_SHEET_ID = "146SPjk_Oa1aWCLUJZh2NqGpjarNIL9ZegUB4DELrKcY";
+const SIGNALS_SHEET_NAME = "Sheet1";
 
-  const items=ARTICLES.filter(a=>a.type==='news');
-  if(!items.length)return;
-  const feature=items.find(a=>a.feature)||items[0];
-  const rest=items.filter(a=>a!==feature);
-  const col1=[],col2=[];
-  rest.forEach((a,i)=>(i%2===0?col1:col2).push(a));
+// Đúng 9 trường webhook TradingView gửi qua Make.com: action, tradeType,
+// ticker, entry, price, sl, tp1, tp2, tp3 — cột "Time" là tùy chọn (Make.com
+// có thể tự điền thời gian khi ghi vào Sheet).
+const DEMO_SIGNALS = [
+  { ticker: "SOYOILU2026", time: "", action: "SELL", tradeType: "", entry: "", price: "73.66", sl: "74.63", tp1: "73.18", tp2: "72.69", tp3: "72.21" }
+];
 
-  const cardHTML=(a,isFeature)=>`
-    <article class="news-card${isFeature?' feature':''}">
-      ${isFeature?`<div class="news-thumb">${a.thumb||'📰'}</div>`:''}
-      <div class="news-body">
-        <span class="tag ${a.tagClass||''}">${a.category}</span>
-        <h3><a href="bai-viet.html?slug=${encodeURIComponent(a.slug)}">${a.title}</a></h3>
-        ${isFeature && a.excerpt?`<p>${a.excerpt}</p>`:''}
-        <div class="meta"><span>${a.date}</span>${a.meta2?`<span>·</span><span>${a.meta2}</span>`:''}</div>
+function signalCardHTML(s, isDemo){
+  const dirClass = String(s.action).toUpperCase()==='SELL' ? 'sell' : 'buy';
+  const dirIcon = String(s.action).toUpperCase()==='SELL' ? '↘' : '↗';
+
+  const row=(label,val)=> (val!==undefined && val!==null && val!=='') ? `
+    <div class="signal-row"><span class="label">${label}</span><span class="val">${val}</span></div>` : '';
+
+  return `
+    <div class="signal-card${isDemo?' demo':''}">
+      <div class="signal-top">
+        <div class="signal-pair">
+          <div class="signal-avatar">${(s.ticker||'').slice(0,2).toUpperCase()}</div>
+          <div><div class="signal-name">${s.ticker}</div>${s.time?`<div class="signal-time">${s.time}</div>`:''}</div>
+        </div>
       </div>
-    </article>`;
+      <div class="signal-tags">
+        <span class="sig-badge ${dirClass}">${dirIcon} ${s.action}</span>
+        ${s.tradeType?`<span class="sig-badge tf">${s.tradeType}</span>`:''}
+      </div>
+      <div class="signal-divider"></div>
+      ${row('Entry', s.entry)}
+      ${row('Giá', s.price)}
+      ${row('Take profit 1', s.tp1)}
+      ${row('Take profit 2', s.tp2)}
+      ${row('Take profit 3', s.tp3)}
+      ${row('Stop loss', s.sl)}
+    </div>`;
+}
 
-  let html=cardHTML(feature,true);
-  html+=`<div class="side-list">${col1.map(a=>cardHTML(a,false)).join('')}</div>`;
-  html+=`<div class="side-list">${col2.map(a=>cardHTML(a,false)).join('')}</div>`;
-  el.innerHTML=html;
+async function renderSignals(){
+  const el=document.getElementById('signalGrid');
+  if(!el)return;
+
+  if(!SIGNALS_SHEET_ID || SIGNALS_SHEET_ID==='YOUR_GOOGLE_SHEET_ID_HERE'){
+    el.innerHTML=DEMO_SIGNALS.map(s=>signalCardHTML(s,true)).join('');
+    return;
+  }
+
+  try{
+    const url=`https://docs.google.com/spreadsheets/d/${SIGNALS_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SIGNALS_SHEET_NAME)}`;
+    const res=await fetch(url);
+    const text=await res.text();
+    const json=JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}')+1));
+    const cols=json.table.cols.map(c=>c.label);
+    const get=(row,name)=>{
+      const idx=cols.indexOf(name);
+      return idx>-1 && row.c[idx] ? row.c[idx].v : '';
+    };
+
+    const signals=json.table.rows.map(row=>({
+      ticker:get(row,'Ticker'), time:get(row,'Time'), action:get(row,'Action'), tradeType:get(row,'TradeType'),
+      entry:get(row,'Entry'), price:get(row,'Price'), sl:get(row,'SL'),
+      tp1:get(row,'TP1'), tp2:get(row,'TP2'), tp3:get(row,'TP3')
+    })).filter(s=>s.ticker);
+
+    el.innerHTML = signals.length
+      ? signals.map(s=>signalCardHTML(s,false)).join('')
+      : DEMO_SIGNALS.map(s=>signalCardHTML(s,true)).join('');
+  }catch(err){
+    el.innerHTML=DEMO_SIGNALS.map(s=>signalCardHTML(s,true)).join('');
+  }
 }
 
 /* ===== TRANG CHỦ: RENDER "TIN ĐIỀU HÀNH MXV" TỪ data/articles.js ===== */
@@ -132,19 +179,11 @@ function renderArticlePage(){
     return;
   }
 
-  const isNews=a.type==='news';
-  const catLabel=isNews?(a.category||'Tin tức'):'Tin điều hành MXV';
   document.title=a.title+' — ATB Commodity';
   const metaDesc=document.querySelector('meta[name="description"]');
-  if(metaDesc)metaDesc.setAttribute('content',a.excerpt||a.note||a.title);
+  if(metaDesc)metaDesc.setAttribute('content',a.note||a.title);
 
-  const metaLine=isNews
-    ? `<span>${a.date}</span>${a.meta2?`<span>·</span><span>${a.meta2}</span>`:''}`
-    : `<span>${a.date}</span>${a.note?`<span>·</span><span>${a.note}</span>`:''}`;
-
-  const disclaimer=isNews
-    ? `<div class="article-disclaimer">⚠️ <b>Miễn trừ trách nhiệm:</b> Nội dung trên chỉ mang tính chất tham khảo, không phải khuyến nghị đầu tư. Giao dịch hàng hóa phái sinh có rủi ro; nhà đầu tư tự chịu trách nhiệm với quyết định của mình.</div>`
-    : '';
+  const metaLine=`<span>${a.date}</span>${a.note?`<span>·</span><span>${a.note}</span>`:''}`;
 
   const attachment=a.attachment
     ? `<div class="article-attachment">
@@ -155,57 +194,44 @@ function renderArticlePage(){
     : '';
 
   el.innerHTML=`
-    <div class="breadcrumb"><a href="index.html">Trang chủ</a> / <span>${catLabel}</span></div>
+    <div class="breadcrumb"><a href="index.html">Trang chủ</a> / <span>Tin điều hành MXV</span></div>
     <article class="article-detail">
-      <span class="tag ${a.tagClass||''}">${catLabel}</span>
+      <span class="tag">Tin điều hành MXV</span>
       <h1>${a.title}</h1>
       <div class="meta">${metaLine}</div>
       <div class="article-body">${a.body}</div>
       ${attachment}
-      ${disclaimer}
     </article>
     <a class="btn ghost article-back" href="index.html">← Quay lại trang chủ</a>`;
 }
 
-/* ===== TRANG DANH SÁCH (danh-sach.html?type=news|mxv) ===== */
+/* ===== TRANG DANH SÁCH (danh-sach.html) ===== */
 function renderListPage(){
   const el=document.getElementById('listRoot');
   if(!el || typeof ARTICLES==='undefined')return;
 
-  const type=new URLSearchParams(location.search).get('type')==='mxv'?'mxv':'news';
-  const isNews=type==='news';
-  const items=ARTICLES.filter(a=>a.type===type).sort((a,b)=>parseDate(b.date)-parseDate(a.date));
-
-  const pageTitle=isNews?'Tin tức 24/7':'Tin điều hành MXV';
+  const items=ARTICLES.slice().sort((a,b)=>parseDate(b.date)-parseDate(a.date));
+  const pageTitle='Tin điều hành MXV';
   document.title=pageTitle+' — ATB Commodity';
 
   const listHTML=!items.length
     ? '<p style="color:var(--muted)">Chưa có bài viết nào.</p>'
-    : isNews
-      ? `<div class="news-grid-flat">${items.map(a=>`
-          <article class="news-card">
-            <div class="news-body">
-              <span class="tag ${a.tagClass||''}">${a.category}</span>
-              <h3><a href="bai-viet.html?slug=${encodeURIComponent(a.slug)}">${a.title}</a></h3>
-              <div class="meta"><span>${a.date}</span>${a.meta2?`<span>·</span><span>${a.meta2}</span>`:''}</div>
-            </div>
-          </article>`).join('')}</div>`
-      : `<div class="mxv-list">${items.map(a=>{
-          const {day,monthYear}=splitDate(a.date);
-          return `<a class="mxv-item" href="bai-viet.html?slug=${encodeURIComponent(a.slug)}">
-            <div class="mxv-date"><b>${day}</b>${monthYear}</div>
-            <div><h3>${a.title}</h3><small>${a.note||''}</small></div>
-          </a>`;
-        }).join('')}</div>`;
+    : `<div class="mxv-list">${items.map(a=>{
+        const {day,monthYear}=splitDate(a.date);
+        return `<a class="mxv-item" href="bai-viet.html?slug=${encodeURIComponent(a.slug)}">
+          <div class="mxv-date"><b>${day}</b>${monthYear}</div>
+          <div><h3>${a.title}</h3><small>${a.note||''}</small></div>
+        </a>`;
+      }).join('')}</div>`;
 
   el.innerHTML=`
     <div class="breadcrumb"><a href="index.html">Trang chủ</a> / <span>${pageTitle}</span></div>
-    <div class="sec-head"><div><h2>${isNews?'Tin tức <span>24/7</span>':'Tin điều hành <span>MXV</span>'}</h2></div></div>
+    <div class="sec-head"><div><h2>Tin điều hành <span>MXV</span></h2></div></div>
     ${listHTML}
     <a class="btn ghost article-back" style="margin-top:30px" href="index.html">← Quay lại trang chủ</a>`;
 }
 
-renderNewsGrid();
+renderSignals();
 renderMxvList();
 renderArticlePage();
 renderListPage();
