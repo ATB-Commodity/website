@@ -123,40 +123,56 @@ function signalCardHTML(s, isDemo){
     </div>`;
 }
 
-async function renderSignals(){
+function renderSignals(){
   const el=document.getElementById('signalGrid');
   if(!el)return;
 
+  const showDemo=()=>{ el.innerHTML=DEMO_SIGNALS.map(s=>signalCardHTML(s,true)).join(''); };
+
   if(!SIGNALS_SHEET_ID || SIGNALS_SHEET_ID==='YOUR_GOOGLE_SHEET_ID_HERE'){
-    el.innerHTML=DEMO_SIGNALS.map(s=>signalCardHTML(s,true)).join('');
+    showDemo();
     return;
   }
 
-  try{
-    const url=`https://docs.google.com/spreadsheets/d/${SIGNALS_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SIGNALS_SHEET_NAME)}&_=${Date.now()}`;
-    const res=await fetch(url,{cache:'no-store'});
-    const text=await res.text();
-    const json=JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}')+1));
-    const cols=json.table.cols.map(c=>c.label);
-    const get=(row,name)=>{
-      const idx=cols.indexOf(name);
-      return idx>-1 && row.c[idx] ? row.c[idx].v : '';
-    };
+  // Google Sheets gviz endpoint không trả header CORS nên fetch() từ trình
+  // duyệt sẽ bị chặn âm thầm. Dùng JSONP (nạp qua thẻ <script>) thay vì
+  // fetch() — cách chính thức endpoint này được thiết kế để dùng, không bị
+  // CORS chặn vì script tag load cross-origin không chịu ràng buộc CORS.
+  window.google = window.google || {};
+  window.google.visualization = window.google.visualization || {};
+  window.google.visualization.Query = window.google.visualization.Query || {};
+  window.google.visualization.Query.setResponse = function(json){
+    try{
+      const cols=json.table.cols.map(c=>c.label);
+      const get=(row,name)=>{
+        const idx=cols.indexOf(name);
+        return idx>-1 && row.c[idx] ? row.c[idx].v : '';
+      };
 
-    const signals=json.table.rows.map(row=>({
-      ticker:get(row,'Ticker'), time:get(row,'Time'), action:get(row,'Action'), tradeType:get(row,'TradeType'),
-      entry:get(row,'Entry'), price:get(row,'Price'), sl:get(row,'SL'),
-      tp1:get(row,'TP1'), tp2:get(row,'TP2'), tp3:get(row,'TP3')
-    })).filter(s=>s.ticker)
-      .reverse() // dòng thêm sau nằm dưới trong Sheet -> đảo lại để lệnh mới nhất hiện đầu tiên
-      .slice(0, SIGNALS_MAX_COUNT);
+      const signals=json.table.rows.map(row=>({
+        ticker:get(row,'Ticker'), time:get(row,'Time'), action:get(row,'Action'), tradeType:get(row,'TradeType'),
+        entry:get(row,'Entry'), price:get(row,'Price'), sl:get(row,'SL'),
+        tp1:get(row,'TP1'), tp2:get(row,'TP2'), tp3:get(row,'TP3')
+      })).filter(s=>s.ticker)
+        .reverse() // dòng thêm sau nằm dưới trong Sheet -> đảo lại để lệnh mới nhất hiện đầu tiên
+        .slice(0, SIGNALS_MAX_COUNT);
 
-    el.innerHTML = signals.length
-      ? signals.map(s=>signalCardHTML(s,false)).join('')
-      : DEMO_SIGNALS.map(s=>signalCardHTML(s,true)).join('');
-  }catch(err){
-    el.innerHTML=DEMO_SIGNALS.map(s=>signalCardHTML(s,true)).join('');
-  }
+      if(signals.length){
+        el.innerHTML=signals.map(s=>signalCardHTML(s,false)).join('');
+      }else{
+        showDemo();
+      }
+    }catch(err){
+      showDemo();
+    }
+  };
+
+  const script=document.createElement('script');
+  // headers=1: báo cho Google biết dòng đầu là tên cột, tránh label bị
+  // dính chung với giá trị dòng dữ liệu đầu tiên (VD "Ticker CORNZ2026").
+  script.src=`https://docs.google.com/spreadsheets/d/${SIGNALS_SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${encodeURIComponent(SIGNALS_SHEET_NAME)}&_=${Date.now()}`;
+  script.onerror=showDemo;
+  document.body.appendChild(script);
 }
 
 /* ===== TRANG CHỦ: RENDER "TIN ĐIỀU HÀNH MXV" TỪ data/articles.js ===== */
