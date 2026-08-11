@@ -149,13 +149,27 @@ function renderSignals(){
         return idx>-1 && row.c[idx] ? row.c[idx].v : '';
       };
 
-      const signals=json.table.rows.map(row=>({
-        ticker:get(row,'Ticker'), time:get(row,'Time'), action:get(row,'Action'), tradeType:get(row,'TradeType'),
-        entry:get(row,'Entry'), price:get(row,'Price'), sl:get(row,'SL'),
-        tp1:get(row,'TP1'), tp2:get(row,'TP2'), tp3:get(row,'TP3')
-      })).filter(s=>s.ticker)
-        .reverse() // dòng thêm sau nằm dưới trong Sheet -> đảo lại để lệnh mới nhất hiện đầu tiên
-        .slice(0, SIGNALS_MAX_COUNT);
+      // Nhiều dòng có thể cùng 1 lệnh (Entry/SL/TP1-3 giống nhau) — dòng
+      // sau chỉ là cập nhật trạng thái (Action đổi thành TPx_HIT/SL_HIT)
+      // cho CÙNG lệnh đó, không phải lệnh mới. Gộp lại, giữ dòng mới nhất
+      // cho mỗi lệnh, và xếp theo lệnh nào vừa được cập nhật gần đây nhất.
+      const tradeOrder=[];
+      const tradeData={};
+      json.table.rows.forEach(row=>{
+        const s={
+          ticker:get(row,'Ticker'), time:get(row,'Time'), action:get(row,'Action'), tradeType:get(row,'TradeType'),
+          entry:get(row,'Entry'), price:get(row,'Price'), sl:get(row,'SL'),
+          tp1:get(row,'TP1'), tp2:get(row,'TP2'), tp3:get(row,'TP3')
+        };
+        if(!s.ticker)return;
+        const key=[s.ticker,s.entry,s.sl,s.tp1,s.tp2,s.tp3].join('|');
+        tradeData[key]=s;
+        const pos=tradeOrder.indexOf(key);
+        if(pos>-1)tradeOrder.splice(pos,1);
+        tradeOrder.push(key);
+      });
+
+      const signals=tradeOrder.slice().reverse().slice(0,SIGNALS_MAX_COUNT).map(key=>tradeData[key]);
 
       if(signals.length){
         el.innerHTML=signals.map(s=>signalCardHTML(s,false)).join('');
