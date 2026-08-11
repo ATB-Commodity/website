@@ -85,8 +85,18 @@ const DEMO_SIGNALS = [
 ];
 
 function signalCardHTML(s, isDemo){
-  const dirClass = String(s.action).toUpperCase()==='SELL' ? 'sell' : 'buy';
-  const dirIcon = String(s.action).toUpperCase()==='SELL' ? '↘' : '↗';
+  // TradeType luôn giữ hướng lệnh gốc (BUY/SELL), kể cả ở dòng cập nhật
+  // trạng thái sau này. Action có thể là "BUY"/"SELL" (lệnh mới) hoặc
+  // "TP1_HIT"/"TP2_HIT"/"TP3_HIT"/"SL_HIT" (dòng báo đã chạm mốc).
+  const dir = String(s.tradeType || s.action || '').toUpperCase();
+  const dirClass = dir==='SELL' ? 'sell' : 'buy';
+  const dirIcon = dir==='SELL' ? '↘' : '↗';
+  const dirLabel = s.tradeType || s.action || '';
+
+  const actionUpper = String(s.action || '').toUpperCase();
+  const isStatus = actionUpper && actionUpper!=='BUY' && actionUpper!=='SELL' && actionUpper!==dir;
+  const statusClass = actionUpper.includes('SL') ? 'status-danger' : (actionUpper.includes('HIT') ? 'status-success' : 'status-neutral');
+  const statusLabel = String(s.action || '').replace(/_/g, ' ');
 
   const row=(label,val)=> (val!==undefined && val!==null && val!=='') ? `
     <div class="signal-row"><span class="label">${label}</span><span class="val">${val}</span></div>` : '';
@@ -98,10 +108,10 @@ function signalCardHTML(s, isDemo){
           <div class="signal-avatar">${(s.ticker||'').slice(0,2).toUpperCase()}</div>
           <div><div class="signal-name">${s.ticker}</div>${s.time?`<div class="signal-time">${s.time}</div>`:''}</div>
         </div>
+        ${isStatus?`<span class="sig-badge ${statusClass}">${statusLabel}</span>`:''}
       </div>
       <div class="signal-tags">
-        <span class="sig-badge ${dirClass}">${dirIcon} ${s.action}</span>
-        ${s.tradeType?`<span class="sig-badge tf">${s.tradeType}</span>`:''}
+        <span class="sig-badge ${dirClass}">${dirIcon} ${dirLabel}</span>
       </div>
       <div class="signal-divider"></div>
       ${row('Entry', s.entry)}
@@ -123,8 +133,8 @@ async function renderSignals(){
   }
 
   try{
-    const url=`https://docs.google.com/spreadsheets/d/${SIGNALS_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SIGNALS_SHEET_NAME)}`;
-    const res=await fetch(url);
+    const url=`https://docs.google.com/spreadsheets/d/${SIGNALS_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SIGNALS_SHEET_NAME)}&_=${Date.now()}`;
+    const res=await fetch(url,{cache:'no-store'});
     const text=await res.text();
     const json=JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}')+1));
     const cols=json.table.cols.map(c=>c.label);

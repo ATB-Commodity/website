@@ -85,10 +85,12 @@ section{padding:52px 0}
 .signal-avatar{width:48px;height:48px;border-radius:12px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex:none}
 .signal-name{font-size:18px;font-weight:800;color:var(--navy)}
 .signal-time{font-size:11.5px;color:#93a8bc;margin-top:1px}
-.sig-badge{padding:5px 12px;border-radius:99px;font-size:11px;font-weight:800;letter-spacing:.3px;display:inline-flex;align-items:center;gap:5px}
+.sig-badge{padding:5px 12px;border-radius:99px;font-size:11px;font-weight:800;letter-spacing:.3px;display:inline-flex;align-items:center;gap:5px;text-transform:uppercase}
 .sig-badge.buy{background:#e8f7ee;color:#15803d}
 .sig-badge.sell{background:#fdecec;color:var(--red)}
-.sig-badge.tf{background:#e6eef7;color:var(--navy)}
+.sig-badge.status-success{background:#e8f7ee;color:#15803d}
+.sig-badge.status-danger{background:#fdecec;color:var(--red)}
+.sig-badge.status-neutral{background:#f2f8fd;color:var(--muted)}
 .signal-tags{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .signal-divider{border-top:1px solid var(--line);margin:18px 0 14px}
 .signal-row{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;padding:6px 0}
