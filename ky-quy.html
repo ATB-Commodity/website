@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bài viết — ATB Commodity</title>
-<meta name="description" content="Tin tức và thông báo từ ATB Commodity.">
+<title>Bảng ký quỹ giao dịch — ATB Commodity</title>
+<meta name="description" content="Bảng ký quỹ, phí giao dịch và biến động trên 1 giá theo từng loại hàng hóa phái sinh liên thông MXV.">
 <link rel="icon" type="image/png" href="https://pixabay.com/images/download/atb_commodity-logo-10395673_1920.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -22,15 +22,25 @@
       <a href="index.html#lich-kinh-te">Lịch kinh tế</a>
       <a href="index.html#khuyen-nghi">Khuyến nghị giao dịch</a>
       <a href="index.html#mxv">Tin điều hành MXV</a>
-      <a href="ky-quy.html">Bảng ký quỹ</a>
+      <a href="ky-quy.html" class="active">Bảng ký quỹ</a>
     </nav>
     <button class="menu-toggle" id="menuToggle" onclick="toggleMenu()" aria-label="Mở/đóng menu" aria-expanded="false" aria-controls="mainMenu">☰</button>
     <button class="btn" style="margin-left:8px" onclick="openModal()">Mở tài khoản</button>
   </div>
 </header>
 
-<main class="wrap" id="articleRoot" style="min-height:50vh">
-  <!-- Nội dung bài viết được render bằng assets/main.js dựa vào ?slug= trên URL -->
+<main class="wrap" style="min-height:50vh;padding:30px 20px 60px">
+  <div class="breadcrumb"><a href="index.html">Trang chủ</a> / <span>Bảng ký quỹ</span></div>
+  <div class="sec-head">
+    <div>
+      <h2>Bảng <span>ký quỹ</span> giao dịch</h2>
+      <p class="sec-sub">Mức ký quỹ, phí giao dịch và biến động trên 1 giá theo từng loại hàng hóa phái sinh liên thông MXV.</p>
+    </div>
+  </div>
+  <div id="marginTableRoot">
+    <p style="color:var(--muted)">Đang tải dữ liệu ký quỹ…</p>
+  </div>
+  <p class="signal-footnote">⚠️ Bảng ký quỹ chỉ mang tính chất tham khảo, có thể thay đổi theo thông báo của Sở Giao dịch Hàng hóa Việt Nam (MXV) và các Sở liên thông quốc tế. Vui lòng liên hệ đội ngũ ATB Commodity để được cập nhật mức ký quỹ chính xác tại thời điểm giao dịch.</p>
 </main>
 
 <footer>

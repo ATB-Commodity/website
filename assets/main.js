@@ -123,6 +123,30 @@ function signalCardHTML(s, isDemo){
     </div>`;
 }
 
+/* ===== TIỆN ÍCH DÙNG CHUNG: ĐỌC GOOGLE SHEET CÔNG KHAI QUA JSONP =====
+   Google Sheets gviz endpoint không trả header CORS nên fetch() từ trình
+   duyệt sẽ bị chặn âm thầm. Dùng JSONP (nạp qua thẻ <script>) thay vì
+   fetch() — cách chính thức endpoint này được thiết kế để dùng, không bị
+   CORS chặn vì script tag load cross-origin không chịu ràng buộc CORS.
+   opts: { sheetName, gid, headers } — dùng sheetName HOẶC gid, headers là
+   số dòng tiêu đề (bỏ qua nếu để trình duyệt/Google tự nhận diện). */
+function loadGvizJSONP(sheetId, opts, onData, onError){
+  window.google = window.google || {};
+  window.google.visualization = window.google.visualization || {};
+  window.google.visualization.Query = window.google.visualization.Query || {};
+  window.google.visualization.Query.setResponse = function(json){
+    try{ onData(json); }catch(e){ onError && onError(e); }
+  };
+  const parts=['tqx=out:json'];
+  if(opts.headers)parts.push(`headers=${opts.headers}`);
+  parts.push(opts.sheetName ? `sheet=${encodeURIComponent(opts.sheetName)}` : `gid=${opts.gid}`);
+  parts.push(`_=${Date.now()}`);
+  const script=document.createElement('script');
+  script.src=`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?${parts.join('&')}`;
+  script.onerror=()=>onError && onError(new Error('script load failed'));
+  document.body.appendChild(script);
+}
+
 function renderSignals(){
   const el=document.getElementById('signalGrid');
   if(!el)return;
@@ -134,59 +158,124 @@ function renderSignals(){
     return;
   }
 
-  // Google Sheets gviz endpoint không trả header CORS nên fetch() từ trình
-  // duyệt sẽ bị chặn âm thầm. Dùng JSONP (nạp qua thẻ <script>) thay vì
-  // fetch() — cách chính thức endpoint này được thiết kế để dùng, không bị
-  // CORS chặn vì script tag load cross-origin không chịu ràng buộc CORS.
-  window.google = window.google || {};
-  window.google.visualization = window.google.visualization || {};
-  window.google.visualization.Query = window.google.visualization.Query || {};
-  window.google.visualization.Query.setResponse = function(json){
-    try{
-      const cols=json.table.cols.map(c=>c.label);
-      const get=(row,name)=>{
-        const idx=cols.indexOf(name);
-        return idx>-1 && row.c[idx] ? row.c[idx].v : '';
+  loadGvizJSONP(SIGNALS_SHEET_ID, {sheetName:SIGNALS_SHEET_NAME, headers:1}, (json)=>{
+    const cols=json.table.cols.map(c=>c.label);
+    const get=(row,name)=>{
+      const idx=cols.indexOf(name);
+      return idx>-1 && row.c[idx] ? row.c[idx].v : '';
+    };
+
+    // Nhiều dòng có thể cùng 1 lệnh (Entry/SL/TP1-3 giống nhau) — dòng
+    // sau chỉ là cập nhật trạng thái (Action đổi thành TPx_HIT/SL_HIT)
+    // cho CÙNG lệnh đó, không phải lệnh mới. Gộp lại, giữ dòng mới nhất
+    // cho mỗi lệnh, và xếp theo lệnh nào vừa được cập nhật gần đây nhất.
+    const tradeOrder=[];
+    const tradeData={};
+    json.table.rows.forEach(row=>{
+      const s={
+        ticker:get(row,'Ticker'), time:get(row,'Time'), action:get(row,'Action'), tradeType:get(row,'TradeType'),
+        entry:get(row,'Entry'), price:get(row,'Price'), sl:get(row,'SL'),
+        tp1:get(row,'TP1'), tp2:get(row,'TP2'), tp3:get(row,'TP3')
       };
+      if(!s.ticker)return;
+      const key=[s.ticker,s.entry,s.sl,s.tp1,s.tp2,s.tp3].join('|');
+      tradeData[key]=s;
+      const pos=tradeOrder.indexOf(key);
+      if(pos>-1)tradeOrder.splice(pos,1);
+      tradeOrder.push(key);
+    });
 
-      // Nhiều dòng có thể cùng 1 lệnh (Entry/SL/TP1-3 giống nhau) — dòng
-      // sau chỉ là cập nhật trạng thái (Action đổi thành TPx_HIT/SL_HIT)
-      // cho CÙNG lệnh đó, không phải lệnh mới. Gộp lại, giữ dòng mới nhất
-      // cho mỗi lệnh, và xếp theo lệnh nào vừa được cập nhật gần đây nhất.
-      const tradeOrder=[];
-      const tradeData={};
-      json.table.rows.forEach(row=>{
-        const s={
-          ticker:get(row,'Ticker'), time:get(row,'Time'), action:get(row,'Action'), tradeType:get(row,'TradeType'),
-          entry:get(row,'Entry'), price:get(row,'Price'), sl:get(row,'SL'),
-          tp1:get(row,'TP1'), tp2:get(row,'TP2'), tp3:get(row,'TP3')
-        };
-        if(!s.ticker)return;
-        const key=[s.ticker,s.entry,s.sl,s.tp1,s.tp2,s.tp3].join('|');
-        tradeData[key]=s;
-        const pos=tradeOrder.indexOf(key);
-        if(pos>-1)tradeOrder.splice(pos,1);
-        tradeOrder.push(key);
-      });
+    const signals=tradeOrder.slice().reverse().slice(0,SIGNALS_MAX_COUNT).map(key=>tradeData[key]);
 
-      const signals=tradeOrder.slice().reverse().slice(0,SIGNALS_MAX_COUNT).map(key=>tradeData[key]);
-
-      if(signals.length){
-        el.innerHTML=signals.map(s=>signalCardHTML(s,false)).join('');
-      }else{
-        showDemo();
-      }
-    }catch(err){
+    if(signals.length){
+      el.innerHTML=signals.map(s=>signalCardHTML(s,false)).join('');
+    }else{
       showDemo();
     }
-  };
+  }, showDemo);
+}
 
-  const script=document.createElement('script');
-  // headers=1: báo cho Google biết dòng đầu là tên cột, tránh label bị
-  // dính chung với giá trị dòng dữ liệu đầu tiên (VD "Ticker CORNZ2026").
-  script.src=`https://docs.google.com/spreadsheets/d/${SIGNALS_SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${encodeURIComponent(SIGNALS_SHEET_NAME)}&_=${Date.now()}`;
-  script.onerror=showDemo;
-  document.body.appendChild(script);
+/* ===== TRANG BẢNG KÝ QUỸ (ky-quy.html) ===== */
+const MARGIN_SHEET_ID = "1h8m7s5nwlbJ_vgwlF7Q645K_Upmv1QzXz8xTlPt791s";
+const MARGIN_SHEET_GID = 0;
+
+let MARGIN_ROWS_CACHE = [];
+
+function marginRowHTML(r){
+  return `<tr>
+    <td>${r.stt}</td>
+    <td>${r.name}</td>
+    <td>${r.code}</td>
+    <td>${r.group}</td>
+    <td>${r.exchange}</td>
+    <td class="num">${r.marginOrg}</td>
+    <td class="num">${r.marginPersonal}</td>
+    <td class="num">${r.feeTrade}</td>
+    <td class="num">${r.feeSettle}</td>
+    <td class="num">${r.tick}</td>
+  </tr>`;
+}
+
+function filterMarginTable(){
+  const input=document.getElementById('marginSearch');
+  const body=document.getElementById('marginTableBody');
+  if(!input || !body)return;
+  const q=input.value.trim().toLowerCase();
+  const filtered=q
+    ? MARGIN_ROWS_CACHE.filter(r=>(r.name+' '+r.code+' '+r.group).toLowerCase().includes(q))
+    : MARGIN_ROWS_CACHE;
+  body.innerHTML=filtered.length
+    ? filtered.map(marginRowHTML).join('')
+    : `<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:24px">Không tìm thấy hàng hóa phù hợp.</td></tr>`;
+}
+
+function renderMarginTable(){
+  const root=document.getElementById('marginTableRoot');
+  if(!root)return;
+
+  // Ưu tiên giá trị đã định dạng sẵn (VD "12.576.000 đ") thay vì số thô.
+  const cell=(c)=> c ? (c.f!=null ? c.f : (c.v!=null?c.v:'')) : '';
+
+  loadGvizJSONP(MARGIN_SHEET_ID, {gid:MARGIN_SHEET_GID}, (json)=>{
+    // Đọc theo đúng vị trí cột (không dựa tên cột) vì ô tiêu đề "Mã hàng
+    // hóa" bị dính chung với dòng tiêu đề gộp (merge cell) phía trên.
+    MARGIN_ROWS_CACHE = json.table.rows.map(row=>({
+      stt: cell(row.c[1]),
+      name: cell(row.c[2]),
+      code: cell(row.c[3]),
+      group: cell(row.c[4]),
+      exchange: cell(row.c[5]),
+      marginOrg: cell(row.c[6]),
+      marginPersonal: cell(row.c[7]),
+      feeTrade: cell(row.c[8]),
+      feeSettle: cell(row.c[9]),
+      tick: cell(row.c[13])
+    })).filter(r=>r.name);
+
+    if(!MARGIN_ROWS_CACHE.length){
+      root.innerHTML=`<p style="color:var(--muted)">Chưa có dữ liệu ký quỹ.</p>`;
+      return;
+    }
+
+    root.innerHTML=`
+      <div class="margin-toolbar">
+        <input type="text" id="marginSearch" class="margin-search" placeholder="Tìm theo tên hoặc mã hàng hóa...">
+      </div>
+      <div class="margin-table-wrap">
+        <table class="margin-table">
+          <thead><tr>
+            <th>STT</th><th>Hàng hóa</th><th>Mã hàng hóa</th><th>Nhóm hàng hóa</th>
+            <th>Sở liên thông</th><th>Mức ký quỹ tổ chức</th><th>Mức ký quỹ cá nhân</th>
+            <th>Phí Giao Dịch</th><th>Phí Thanh Toán Hợp Đồng</th><th>Biến Động Trên 1 Giá</th>
+          </tr></thead>
+          <tbody id="marginTableBody">${MARGIN_ROWS_CACHE.map(marginRowHTML).join('')}</tbody>
+        </table>
+      </div>`;
+
+    document.getElementById('marginSearch').addEventListener('input', filterMarginTable);
+  }, ()=>{
+    root.innerHTML=`<p style="color:var(--red)">Không tải được dữ liệu ký quỹ. Vui lòng thử lại sau.</p>`;
+  });
 }
 
 /* ===== TRANG CHỦ: RENDER "TIN ĐIỀU HÀNH MXV" TỪ data/articles.js ===== */
@@ -278,3 +367,4 @@ renderSignals();
 renderMxvList();
 renderArticlePage();
 renderListPage();
+renderMarginTable();
