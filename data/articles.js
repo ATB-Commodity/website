@@ -22,6 +22,32 @@
 
 window.ARTICLES = [
   {
+    slug: "685-qd-tgd-mxv-ky-quy-bac-comex",
+    type: "mxv",
+    title: "685/QĐ/TGĐ-MXV: Điều chỉnh mức ký quỹ giao dịch mặt hàng Bạc (COMEX)",
+    date: "19/08/2026",
+    note: "Hiệu lực từ ngày 19/08/2026, thay thế Quyết định 666/QĐ/TGĐ-MXV ngày 10/08/2026",
+    attachment: { name: "Toàn văn Quyết định 685/QĐ/TGĐ-MXV (PDF - MXV)", url: "https://mxv.com.vn/van-ban/f3053/685qd-vv-ban-hanh-muc-ky-quy-giao-dich-hang-hoa-tai-so-giao-dich-hang-hoa-viet-nam.pdf" },
+    body: `
+      <p>Căn cứ Quyết định số 685/QĐ/TGĐ-MXV của Sở Giao dịch Hàng hóa Việt Nam (MXV), thay thế Quyết định số 666/QĐ/TGĐ-MXV ngày 10/08/2026, MXV thông báo mức ký quỹ giao dịch mới áp dụng cho các mặt hàng Bạc trên Sở COMEX như sau:</p>
+      <p><strong>1. Bảng mức ký quỹ áp dụng</strong></p>
+      <ul>
+        <li><b>Bạc</b> (mã SIE, COMEX, nhóm Kim loại) — mức ký quỹ ban đầu: 36.367 USD</li>
+        <li><b>Bạc mini</b> (mã MQI, COMEX, nhóm Kim loại) — mức ký quỹ ban đầu: 18.212 USD</li>
+        <li><b>Bạc micro</b> (mã SIL, COMEX, nhóm Kim loại) — mức ký quỹ ban đầu: 7.273 USD</li>
+      </ul>
+      <p><strong>2. Quy định ký quỹ tại MXV</strong></p>
+      <ul>
+        <li>Tỷ lệ ký quỹ: mức ký quỹ ban đầu và duy trì tại MXV bằng 120% mức ký quỹ ban đầu tại các Sở Giao dịch hàng hóa liên thông.</li>
+        <li>Quy đổi ngoại tệ: theo tỷ giá quy đổi do MXV công bố theo từng thời điểm.</li>
+        <li>Mức ký quỹ khách hàng: Thành viên kinh doanh có thể thiết lập mức ký quỹ ban đầu và duy trì cho khách hàng trực thuộc nhưng không thấp hơn mức quy định của MXV.</li>
+      </ul>
+      <p><strong>3. Thời gian hiệu lực:</strong> kể từ ngày 19/08/2026.</p>
+      <p><strong>4. Khuyến nghị quản trị tài khoản:</strong> nhà đầu tư nên theo dõi tỷ lệ an toàn tài khoản và số dư ký quỹ trên phần mềm giao dịch CQG để chủ động thích ứng với mức ký quỹ mới; bổ sung ký quỹ kịp thời hoặc cân đối khối lượng hợp đồng đang nắm giữ nhằm phòng ngừa rủi ro Call Margin / Force Close khi thị trường biến động mạnh.</p>
+      <p><em>Mọi thắc mắc và yêu cầu hỗ trợ chi tiết, Quý Khách hàng vui lòng liên hệ đội ngũ ATB Commodity.</em></p>
+    `
+  },
+  {
     slug: "ap-dung-ty-gia-ngoai-te-22-07-2026",
     type: "mxv",
     title: "Thông báo áp dụng tỷ giá ngoại tệ kể từ ngày 22/07/2026",
