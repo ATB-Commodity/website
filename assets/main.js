@@ -200,12 +200,13 @@ const MARGIN_SHEET_ID = "1h8m7s5nwlbJ_vgwlF7Q645K_Upmv1QzXz8xTlPt791s";
 const MARGIN_SHEET_GID = 0;
 
 let MARGIN_ROWS_CACHE = [];
+let MARGIN_ACTIVE_GROUP = '';
 
 function marginRowHTML(r){
   return `<tr>
     <td>${r.stt}</td>
     <td>${r.name}</td>
-    <td>${r.code}</td>
+    <td class="code">${r.code}</td>
     <td>${r.group}</td>
     <td>${r.exchange}</td>
     <td class="num">${r.marginOrg}</td>
@@ -219,14 +220,26 @@ function marginRowHTML(r){
 function filterMarginTable(){
   const input=document.getElementById('marginSearch');
   const body=document.getElementById('marginTableBody');
+  const count=document.getElementById('marginCount');
   if(!input || !body)return;
   const q=input.value.trim().toLowerCase();
-  const filtered=q
-    ? MARGIN_ROWS_CACHE.filter(r=>(r.name+' '+r.code+' '+r.group).toLowerCase().includes(q))
+  let filtered=MARGIN_ACTIVE_GROUP
+    ? MARGIN_ROWS_CACHE.filter(r=>r.group===MARGIN_ACTIVE_GROUP)
     : MARGIN_ROWS_CACHE;
+  if(q)filtered=filtered.filter(r=>(r.name+' '+r.code+' '+r.group).toLowerCase().includes(q));
+
   body.innerHTML=filtered.length
     ? filtered.map(marginRowHTML).join('')
     : `<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:24px">Không tìm thấy hàng hóa phù hợp.</td></tr>`;
+  if(count)count.textContent=filtered.length+' sản phẩm';
+}
+
+function setMarginGroup(group){
+  MARGIN_ACTIVE_GROUP=group;
+  document.querySelectorAll('.margin-chip').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.group===group);
+  });
+  filterMarginTable();
 }
 
 function renderMarginTable(){
@@ -257,9 +270,22 @@ function renderMarginTable(){
       return;
     }
 
+    MARGIN_ACTIVE_GROUP='';
+    const groups=[...new Set(MARGIN_ROWS_CACHE.map(r=>r.group).filter(Boolean))];
+    const chipsHTML=[`<button class="margin-chip active" data-group="" onclick="setMarginGroup('')">Tất cả</button>`]
+      .concat(groups.map(g=>`<button class="margin-chip" data-group="${g}" onclick="setMarginGroup('${g}')">${g}</button>`))
+      .join('');
+
     root.innerHTML=`
       <div class="margin-toolbar">
-        <input type="text" id="marginSearch" class="margin-search" placeholder="Tìm theo tên hoặc mã hàng hóa...">
+        <div class="margin-toolbar-left">
+          <b>Biểu ký quỹ &amp; phí</b>
+          <span id="marginCount">${MARGIN_ROWS_CACHE.length} sản phẩm</span>
+        </div>
+        <div class="margin-toolbar-right">
+          <div class="margin-filters">${chipsHTML}</div>
+          <input type="text" id="marginSearch" class="margin-search" placeholder="Tìm mã / tên...">
+        </div>
       </div>
       <div class="margin-table-wrap">
         <table class="margin-table">
